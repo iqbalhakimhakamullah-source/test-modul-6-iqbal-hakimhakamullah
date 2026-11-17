@@ -10,10 +10,23 @@ class Peminjaman extends Model
     use HasFactory;
 
     protected $table = 'peminjamans';
-    protected $fillable = ['anggota_id', 'buku_id', 'tanggal_pinjam', 'tanggal_kembali'];
+    
+    // Pastikan user_id dan anggota_id masuk fillable
+    protected $fillable = [
+        'user_id', 
+        'anggota_id', 
+        'buku_id', 
+        'tanggal_pinjam', 
+        'tanggal_kembali'
+    ];
 
-        public function buku()
+    public function user()
     {
-        return $this->belongsTo(Buku::class, 'buku_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function buku()
+    {
+        return $this->belongsTo(Buku::class);
     }
 }

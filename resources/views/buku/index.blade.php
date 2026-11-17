@@ -7,7 +7,6 @@
 
     <div id="alert-box" style="display:none; padding: 10px; margin-bottom: 15px; border-radius: 5px;"></div>
 
-    {{-- SOAL 3: Gunakan @can('kelola-buku') --}}
     @can('kelola-buku')
     <div class="form-container" style="background:#fff; padding:15px; border-radius:8px; margin-bottom: 20px; border: 1px solid #d7ccc8;">
         <h3 id="form-title" style="font-weight: bold; margin-bottom: 15px;">Tambah Buku Baru</h3>
@@ -62,8 +61,9 @@
         const form = document.getElementById('bukuForm');
         const alertBox = document.getElementById('alert-box');
         
-        // SOAL 3: Cek Gate dari Laravel ke dalam JavaScript
+        // Cek hak akses
         const canManage = @json(auth()->check() ? auth()->user()->can('kelola-buku') : false);
+        const isLoggedIn = @json(auth()->check());
 
         function showAlert(message, isError = false) {
             alertBox.style.display = 'block';
@@ -83,11 +83,17 @@
                 result.data.forEach((buku) => {
                     let aksiHtml = '-';
                     
-                    // Gunakan canManage hasil dari Gate
+                    // Jika Admin/Petugas
                     if (canManage) {
                         aksiHtml = `
                             <button onclick="editData(${buku.id}, '${buku.kategori_id}', '${buku.judul_buku}', '${buku.penulis}', ${buku.tahun_terbit})" style="background:#eab308; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer; margin-right:5px;">Ubah</button>
                             <button onclick="deleteData(${buku.id})" style="background:#ef4444; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer;">Hapus</button>
+                        `;
+                    } 
+                    // Jika Siswa (Bisa Pinjam)
+                    else if (isLoggedIn) {
+                        aksiHtml = `
+                            <button onclick="pinjamBuku(${buku.id})" style="background:#10b981; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer;">Pinjam</button>
                         `;
                     }
 
@@ -102,6 +108,30 @@
                     `;
                     tableBody.insertAdjacentHTML('beforeend', row);
                 });
+            } catch (error) {
+                showAlert(error.message, true);
+            }
+        }
+
+        // Fungsi Pinjam Buku (BARU)
+        async function pinjamBuku(id) {
+            if (!confirm('Apakah kamu yakin ingin meminjam buku ini?')) return;
+            
+            try {
+                const response = await fetch('/peminjaman', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ buku_id: id })
+                });
+                
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Gagal meminjam.');
+                
+                showAlert('Berhasil meminjam buku!');
             } catch (error) {
                 showAlert(error.message, true);
             }

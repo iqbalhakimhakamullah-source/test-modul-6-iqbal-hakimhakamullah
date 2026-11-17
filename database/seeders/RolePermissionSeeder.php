@@ -11,7 +11,7 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Buat 16 Permission
+        // 1. Buat 16 Permission (Modul 5)
         $permissions = [
             'Akses dashboard admin', 'Akses dashboard petugas', 'Lihat daftar buku',
             'Kelola data buku', 'Kelola data pengguna', 'Kelola role pengguna',
@@ -31,20 +31,25 @@ class RolePermissionSeeder extends Seeder
         $siswa = Role::create(['name' => 'siswa']);
 
         // 3. Beri Permission ke Role
+        // Admin dapat semua akses
         $admin->givePermissionTo(Permission::all());
         
+        // Petugas dapat akses operasional
         $petugas->givePermissionTo([
             'Akses dashboard petugas', 'Lihat daftar buku', 'Kelola data buku',
             'Kelola peminjaman', 'Kelola pengembalian', 'Memproses persetujuan peminjaman',
             'Mencatat pengembalian buku', 'Lihat laporan perpustakaan', 'Lihat profil sendiri', 'Ubah profil sendiri'
         ]);
 
+        // Siswa dapat akses baca & pinjam
         $siswa->givePermissionTo([
             'Lihat daftar buku', 'Mengajukan peminjaman buku', 'Melihat status peminjaman sendiri',
             'Melihat riwayat peminjaman sendiri', 'Lihat profil sendiri', 'Ubah profil sendiri'
         ]);
 
-        // 4. Buat Akun Dummy
+        // ==========================================
+        // 4. Buat Akun Dummy (Bawaan Modul 5)
+        // ==========================================
         $uAdmin = User::create(['name' => 'Admin Perpus', 'email' => 'admin@gmail.com', 'password' => bcrypt('password')]);
         $uAdmin->assignRole('admin');
 
@@ -53,5 +58,14 @@ class RolePermissionSeeder extends Seeder
 
         $uSiswa = User::create(['name' => 'Siswa Perpus', 'email' => 'siswa@gmail.com', 'password' => bcrypt('password')]);
         $uSiswa->assignRole('siswa');
+
+        // ==========================================
+        // 5. TAMBAHAN MODUL 6: Akun Siswa A & B untuk Uji IDOR
+        // ==========================================
+        $uSiswaA = User::create(['name' => 'Siswa A', 'email' => 'siswa.a@gmail.com', 'password' => bcrypt('password')]);
+        $uSiswaA->assignRole('siswa');
+
+        $uSiswaB = User::create(['name' => 'Siswa B', 'email' => 'siswa.b@gmail.com', 'password' => bcrypt('password')]);
+        $uSiswaB->assignRole('siswa');
     }
 }
