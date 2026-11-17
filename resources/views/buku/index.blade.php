@@ -5,7 +5,7 @@
 @section('content')
     <h2>Daftar Buku</h2>
     <!-- CELAH A1: XSS -->
-    <div>{!! isset($judul_xss) ? $judul_xss : '' !!}</div>
+    <div>{{ isset($judul_xss) ? $judul_xss : '' }}</div>
 
     <div id="alert-box" style="display:none; padding: 10px; margin-bottom: 15px; border-radius: 5px;"></div>
 
@@ -148,12 +148,19 @@
             });
         }
 
-        async function deleteData(id) {
+             async function deleteData(id) {
             if (!confirm('Yakin ingin menghapus buku ini?')) return;
+            
+            // Ambil token CSRF dari meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
             try {
-                const response = await fetch(`${apiUrl}/${id}`, {
+                const response = await fetch(`/buku/${id}`, { // Ubah URL ke /buku/{id}, bukan /api/buku
                     method: 'DELETE',
-                    headers: { 'Accept': 'application/json' }
+                    headers: { 
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken // Sertakan token di sini
+                    }
                 });
                 if (!response.ok) throw new Error('Gagal menghapus data.');
                 showAlert('Buku berhasil dihapus.');

@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use App\Models\Kategori;
-use Illuminate\Support\Facades\DB;
 
 class BukuController extends Controller
 {
     public function index()
     {
-        // Ambil data kategori untuk dropdown form
         $kategoris = Kategori::all();
         return view('buku.index', compact('kategoris'));
     }
@@ -22,17 +20,29 @@ class BukuController extends Controller
         return view('buku.show', compact('buku'));
     }
 
+    // ==========================================
+    // PERBAIKAN A2: SQL Injection menjadi Eloquent (Binding)
+    // ==========================================
     public function cari(Request $request)
-{
-    $judul = $request->query('judul');
-    // CELAH A2: Raw Query tanpa binding
-    $buku = DB::select("SELECT * FROM bukus WHERE judul = '$judul'");
-    return response()->json($buku);
-}
+    {
+        $judul = $request->query('judul');
+        // Menggunakan Eloquent agar otomatis terhindar dari SQLi
+        $buku = Buku::where('judul', $judul)->get(); 
+        return response()->json($buku);
+    }
 
-    public function hapus($id)
-{
-    \App\Models\Buku::find($id)->delete();
-    return redirect('/buku')->with('success', 'Buku terhapus!');
-}
+    // ==========================================
+    // PERBAIKAN A3: Mengganti method hapus menjadi destroy
+    // ==========================================
+    public function destroy($id)
+    {
+        $buku = Buku::find($id);
+        
+        if ($buku) {
+            $buku->delete();
+            return response()->json(['message' => 'Buku berhasil dihapus'], 200);
+        }
+        
+        return response()->json(['message' => 'Buku tidak ditemukan'], 404);
+    }
 }
