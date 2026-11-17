@@ -15,14 +15,14 @@ Route::get('/', function () {
 // Route yang WAJIB Login (Auth)
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Buku (Bisa diakses semua role)
+    // Buku (Lihat saja, semua role bisa)
     Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
     Route::get('/buku/{id}', [BukuController::class, 'show'])->name('buku.show');
     
-    // Route A2 (SQLi)
+    // Route Celah A2 (SQLi)
     Route::get('/buku-cari', [BukuController::class, 'cari']);
 
-    // Route A4 (IDOR)
+    // Route Celah A4 (IDOR)
     Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
 
     // Profil Breeze
@@ -31,9 +31,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // ==========================================
-    // PERBAIKAN A3: Route DELETE (Ganti Route GET lama)
+    // SOAL 3: Route Kelola Buku pakai Gate
     // ==========================================
-    Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
+    Route::middleware(['can:kelola-buku'])->group(function () {
+        // Route dummy untuk ngetes 403 Forbidden (Siswa ketik URL ini)
+        Route::get('/buku/create', function () { 
+            return "Halaman Form Tambah Buku"; 
+        })->name('buku.create');
+        
+        // Route Hapus (Perbaikan A3)
+        Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
+        
+        // Route API untuk CRUD (jika ditaruh di web.php)
+        Route::post('/api/buku', [App\Http\Controllers\Api\BukuController::class, 'store']);
+        Route::put('/api/buku/{id}', [App\Http\Controllers\Api\BukuController::class, 'update']);
+        Route::delete('/api/buku/{id}', [App\Http\Controllers\Api\BukuController::class, 'destroy']);
+    });
 
     // ==========================================
     // KHUSUS ADMIN
@@ -59,14 +72,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['permission:Lihat laporan perpustakaan'])->group(function () {
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     });
-
-    // Route SEMENTARA untuk ngetes perbaikan XSS
-Route::get('/tes-xss', function () {
-    return view('buku.index', [
-        'judul_xss' => "<script>alert('250441100017')</script>", 
-        'kategoris' => \App\Models\Kategori::all()
-    ]);
-});
 
 });
 

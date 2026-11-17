@@ -4,13 +4,11 @@
 
 @section('content')
     <h2>Daftar Buku</h2>
-    <!-- CELAH A1: XSS -->
-    <div>{{ isset($judul_xss) ? $judul_xss : '' }}</div>
 
     <div id="alert-box" style="display:none; padding: 10px; margin-bottom: 15px; border-radius: 5px;"></div>
 
-    {{-- FORM TAMBAH BUKU: Hanya muncul untuk Admin & Petugas --}}
-    @role('admin|petugas')
+    {{-- SOAL 3: Gunakan @can('kelola-buku') --}}
+    @can('kelola-buku')
     <div class="form-container" style="background:#fff; padding:15px; border-radius:8px; margin-bottom: 20px; border: 1px solid #d7ccc8;">
         <h3 id="form-title" style="font-weight: bold; margin-bottom: 15px;">Tambah Buku Baru</h3>
         <form id="bukuForm">
@@ -40,7 +38,7 @@
             <button type="button" id="cancel-btn" style="display:none; background:#999; color:white; padding:10px 20px; border-radius:4px; border:none; cursor:pointer;" onclick="resetForm()">Batal Edit</button>
         </form>
     </div>
-    @endrole
+    @endcan
 
     <div class="overflow-x-auto">
         <table style="width:100%; border-collapse: collapse; background: #fff;">
@@ -63,8 +61,9 @@
         const tableBody = document.getElementById('buku-table-body');
         const form = document.getElementById('bukuForm');
         const alertBox = document.getElementById('alert-box');
-        // Ambil role user yang sedang login
-        const userRole = "{{ auth()->check() ? auth()->user()->getRoleNames()->first() : '' }}"; 
+        
+        // SOAL 3: Cek Gate dari Laravel ke dalam JavaScript
+        const canManage = @json(auth()->check() ? auth()->user()->can('kelola-buku') : false);
 
         function showAlert(message, isError = false) {
             alertBox.style.display = 'block';
@@ -84,8 +83,8 @@
                 result.data.forEach((buku) => {
                     let aksiHtml = '-';
                     
-                    // TOMBOL AKSI: Hanya muncul untuk admin & petugas
-                    if (userRole === 'admin' || userRole === 'petugas') {
+                    // Gunakan canManage hasil dari Gate
+                    if (canManage) {
                         aksiHtml = `
                             <button onclick="editData(${buku.id}, '${buku.kategori_id}', '${buku.judul_buku}', '${buku.penulis}', ${buku.tahun_terbit})" style="background:#eab308; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer; margin-right:5px;">Ubah</button>
                             <button onclick="deleteData(${buku.id})" style="background:#ef4444; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer;">Hapus</button>
@@ -126,7 +125,11 @@
                 try {
                     const response = await fetch(url, {
                         method: method,
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
                         body: JSON.stringify(payload)
                     });
                     const result = await response.json();
@@ -148,18 +151,14 @@
             });
         }
 
-             async function deleteData(id) {
+        async function deleteData(id) {
             if (!confirm('Yakin ingin menghapus buku ini?')) return;
-            
-            // Ambil token CSRF dari meta tag
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
             try {
-                const response = await fetch(`/buku/${id}`, { // Ubah URL ke /buku/{id}, bukan /api/buku
+                const response = await fetch(`/buku/${id}`, {
                     method: 'DELETE',
                     headers: { 
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken // Sertakan token di sini
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 });
                 if (!response.ok) throw new Error('Gagal menghapus data.');
