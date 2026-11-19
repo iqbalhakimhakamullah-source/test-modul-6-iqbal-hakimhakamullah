@@ -4,6 +4,7 @@
 
 @section('content')
     <h2>Daftar Buku</h2>
+    <div>{{ isset($judul_xss) ? $judul_xss : '' }}</div>
 
     <div id="alert-box" style="display:none; padding: 10px; margin-bottom: 15px; border-radius: 5px;"></div>
 

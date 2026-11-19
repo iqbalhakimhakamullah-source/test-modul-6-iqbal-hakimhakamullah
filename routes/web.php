@@ -56,6 +56,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     });
 
+    Route::get('/buku/{buku}/hapus', [App\Http\Controllers\BukuController::class, 'hapus'])->middleware('auth');
+
+    Route::get('/tes-xss', function () {
+    return view('buku.index', ['judul_xss' => "<script>alert('250441100017')</script>", 'kategoris' => \App\Models\Kategori::all()]);
+});
 });
 
 require __DIR__.'/auth.php';

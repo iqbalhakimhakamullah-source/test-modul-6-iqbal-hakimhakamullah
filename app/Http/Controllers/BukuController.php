@@ -45,4 +45,10 @@ class BukuController extends Controller
         
         return response()->json(['message' => 'Buku tidak ditemukan'], 404);
     }
+
+    public function hapus($id)
+{
+    \App\Models\Buku::find($id)->delete();
+    return redirect('/buku')->with('success', 'Buku terhapus!');
+}
 }

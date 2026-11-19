@@ -35,7 +35,7 @@ class PeminjamanController extends Controller
     public function show($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
-        Gate::authorize('view', $peminjaman);
+        
         return response()->json($peminjaman); 
     }
 
