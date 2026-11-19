@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'Perpustakaan') }}</title>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="{{ asset('build/assets/app-Du77CGmy.css') }}">
+        <script type="module" src="{{ asset('build/assets/app-Bk8Plnzc.js') }}"></script>
     </head>
     <body style="background-color: #fdf6e3; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: Georgia, serif;">
         

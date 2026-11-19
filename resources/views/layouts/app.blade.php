@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Perpustakaan')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('build/assets/app-Du77CGmy.css') }}">
+    <script type="module" src="{{ asset('build/assets/app-Bk8Plnzc.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
