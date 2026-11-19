@@ -45,5 +45,9 @@ foreach ($envOverrides as $key => $value) {
     $_SERVER[$key] = $value;
 }
 
-// 3. Forward request ke public/index.php Laravel
+// 3. Normalisasi SCRIPT_NAME dan PHP_SELF agar Laravel tidak menganggap ada prefix /api
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
+
+// 4. Forward request ke public/index.php Laravel
 require __DIR__ . '/../public/index.php';
