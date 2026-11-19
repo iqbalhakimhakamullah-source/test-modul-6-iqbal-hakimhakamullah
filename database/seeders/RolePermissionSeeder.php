@@ -50,7 +50,7 @@ class RolePermissionSeeder extends Seeder
         // ==========================================
         // 4. Buat Akun Dummy (Bawaan Modul 5)
         // ==========================================
-        $uAdmin = User::create(['name' => 'Admin Perpus', 'email' => 'admin@gmail.com', 'password' => bcrypt('password')]);
+        $uAdmin = User::create(['name' => 'Admin Perpus', 'email' => 'admin@gmail.com', 'password' => bcrypt('admin123')]);
         $uAdmin->assignRole('admin');
 
         $uPetugas = User::create(['name' => 'Petugas Perpus', 'email' => 'petugas@gmail.com', 'password' => bcrypt('password')]);
