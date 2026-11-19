@@ -19,7 +19,6 @@ class PeminjamanPolicy
         }
 
         // 2. Siswa HANYA boleh melihat peminjaman miliknya sendiri.
-        // Asumsi: di tabel peminjamans ada kolom 'user_id' (dari Modul 5)
         return $user->id === $peminjaman->user_id;
     }
 }
