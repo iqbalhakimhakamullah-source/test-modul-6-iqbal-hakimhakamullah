@@ -1,9 +1,9 @@
 <?php
 
-// Vercel Serverless Function Entry Point untuk Laravel
+// Pastikan direktori writable di serverless environment (/tmp)
 $storagePath = '/tmp/storage';
 $directories = [
-    $storagePath . '/app',
+    $storagePath . '/app/public',
     $storagePath . '/framework/cache/data',
     $storagePath . '/framework/sessions',
     $storagePath . '/framework/views',
@@ -16,9 +16,9 @@ foreach ($directories as $dir) {
     }
 }
 
-// Paksa Laravel agar menyimpan file sementara di /tmp (karena Vercel read-only)
+// Set environment Laravel agar menggunakan /tmp untuk runtime storage
 putenv('APP_STORAGE=' . $storagePath);
 putenv('VIEW_COMPILED_PATH=' . $storagePath . '/framework/views');
 
-// Panggil file index utama Laravel
+// Forward request ke public/index.php Laravel
 require __DIR__ . '/../public/index.php';
