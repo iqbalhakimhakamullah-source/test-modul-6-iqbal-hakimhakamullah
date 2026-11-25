@@ -15,7 +15,9 @@
         <table style="width:100%; border-collapse: collapse; background: #fff;">
             <thead>
                 <tr style="background:#f3f4f6;">
+                    @role('admin|petugas')
                     <th style="padding: 10px; border: 1px solid #ddd;">ID</th>
+                    @endrole
                     <th style="padding: 10px; border: 1px solid #ddd;">Judul Buku</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Tanggal Pinjam</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Tanggal Kembali</th>
@@ -25,7 +27,9 @@
             <tbody>
                 @forelse($peminjamans as $peminjaman)
                     <tr>
+                        @role('admin|petugas')
                         <td style="padding: 8px; border: 1px solid #ddd;">{{ $peminjaman->id }}</td>
+                        @endrole
                         <td style="padding: 8px; border: 1px solid #ddd;">{{ $peminjaman->buku->judul }}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">{{ $peminjaman->tanggal_pinjam }}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">
@@ -41,7 +45,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="padding: 10px; text-align: center; border: 1px solid #ddd;">
+                        <td colspan="{{ auth()->user()->hasRole('admin') || auth()->user()->hasRole('petugas') ? 5 : 4 }}" style="padding: 10px; text-align: center; border: 1px solid #ddd;">
                             Belum ada riwayat peminjaman.
                         </td>
                     </tr>
