@@ -33,6 +33,13 @@
                             {{ __('Dashboard Petugas') }}
                         </x-nav-link>
                     @endrole
+
+                    {{-- Menu khusus Siswa --}}
+                    @role('siswa')
+                        <x-nav-link :href="route('peminjaman.riwayat-siswa')" :active="request()->routeIs('peminjaman.riwayat-siswa')">
+                            {{ __('Riwayat Peminjaman') }}
+                        </x-nav-link>
+                    @endrole
                 </div>
 
             <!-- Settings Dropdown -->

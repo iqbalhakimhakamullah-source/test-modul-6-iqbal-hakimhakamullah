@@ -25,5 +25,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('kelola-buku', function (User $user) {
             return $user->hasRole('admin') || $user->hasRole('petugas');
         });
+
+        // Register Peminjaman Policy
+        Gate::policy(\App\Models\Peminjaman::class, \App\Policies\PeminjamanPolicy::class);
     }
 }

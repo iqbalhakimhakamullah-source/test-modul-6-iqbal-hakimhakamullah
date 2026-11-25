@@ -16,7 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/buku/{id}', [BukuController::class, 'show'])->name('buku.show');
     Route::get('/buku-cari', [BukuController::class, 'cari']);
     Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
-    Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']); // Route A4
+    Route::get('/peminjaman/{peminjaman}', [PeminjamanController::class, 'show'])->middleware('can:view,peminjaman'); // Route A4
+    Route::get('/riwayat-peminjaman', [PeminjamanController::class, 'riwayatSiswa'])->name('peminjaman.riwayat-siswa');
 
     // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

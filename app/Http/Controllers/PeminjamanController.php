@@ -32,11 +32,21 @@ class PeminjamanController extends Controller
     }
 
     // Soal 4: Untuk melihat detail (dilindungi Policy)
-    public function show($id)
+    public function show(Peminjaman $peminjaman)
     {
-        $peminjaman = Peminjaman::findOrFail($id);
-        
-        return response()->json($peminjaman); 
+        // Policy check otomatis via middleware
+        return response()->json($peminjaman);
+    }
+
+    // Fitur Riwayat Peminjaman untuk Siswa
+    public function riwayatSiswa()
+    {
+        $peminjamans = Peminjaman::with(['user', 'buku'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('peminjaman.riwayat-siswa', compact('peminjamans'));
     }
 
     // FITUR SISWA: Mengajukan pinjam
