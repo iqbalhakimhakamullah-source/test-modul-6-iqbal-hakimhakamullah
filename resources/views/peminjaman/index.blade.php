@@ -32,6 +32,7 @@
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: #f3f4f6;">
+                    <th style="padding: 10px; border: 1px solid #ddd;">ID</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Peminjam</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Judul Buku</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Tgl Pinjam</th>
@@ -43,6 +44,7 @@
             <tbody>
                 @forelse($peminjamans as $p)
                 <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;">{{ $p->id }}</td>
                     <td style="padding: 10px; border: 1px solid #ddd;">{{ $p->user->name ?? 'User Dihapus' }}</td>
                     <td style="padding: 10px; border: 1px solid #ddd;">{{ $p->buku->judul ?? 'Buku Dihapus' }}</td>
                     <td style="padding: 10px; border: 1px solid #ddd;">{{ $p->tanggal_pinjam }}</td>
@@ -68,7 +70,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" style="padding: 10px; border: 1px solid #ddd; text-align: center;">Belum ada data peminjaman.</td>
+                    <td colspan="7" style="padding: 10px; border: 1px solid #ddd; text-align: center;">Belum ada data peminjaman.</td>
                 </tr>
                 @endforelse
             </tbody>

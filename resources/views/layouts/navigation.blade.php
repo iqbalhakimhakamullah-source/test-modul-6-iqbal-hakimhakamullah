@@ -34,6 +34,13 @@
                         </x-nav-link>
                     @endrole
 
+                    {{-- Menu Operasional untuk Admin & Petugas --}}
+                    @role('admin|petugas')
+                        <x-nav-link :href="route('peminjaman.index')" :active="request()->routeIs('peminjaman.index')">
+                            {{ __('Operasional') }}
+                        </x-nav-link>
+                    @endrole
+
                     {{-- Menu khusus Siswa --}}
                     @role('siswa')
                         <x-nav-link :href="route('peminjaman.riwayat-siswa')" :active="request()->routeIs('peminjaman.riwayat-siswa')">

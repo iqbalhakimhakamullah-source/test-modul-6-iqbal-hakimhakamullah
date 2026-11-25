@@ -21,7 +21,12 @@
         {{-- Menu Laporan hanya untuk Admin & Petugas --}}
         @can('Lihat laporan perpustakaan')
             <a href="{{ route('laporan.index') }}">Laporan</a>
-        @endcan 
+        @endcan
+
+        {{-- Menu Operasional hanya untuk Admin & Petugas --}}
+        @role('admin|petugas')
+            <a href="{{ route('peminjaman.index') }}">Operasional</a>
+        @endrole
         
         @role('admin')
             <a href="{{ route('users.index') }}">Kelola Pengguna</a>
