@@ -8,6 +8,14 @@
 
     <div id="alert-box" style="display:none; padding: 10px; margin-bottom: 15px; border-radius: 5px;"></div>
 
+    @role('siswa')
+    <div style="margin-bottom: 15px;">
+        <a href="{{ route('peminjaman.riwayat-siswa') }}" style="background:#3b82f6; color:white; padding:10px 20px; border-radius:4px; text-decoration:none; display:inline-block;">
+            📚 Riwayat Peminjaman Saya
+        </a>
+    </div>
+    @endrole
+
     @can('kelola-buku')
     <div class="form-container" style="background:#fff; padding:15px; border-radius:8px; margin-bottom: 20px; border: 1px solid #d7ccc8;">
         <h3 id="form-title" style="font-weight: bold; margin-bottom: 15px;">Tambah Buku Baru</h3>

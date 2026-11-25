@@ -5,6 +5,12 @@
 @section('content')
     <h2>Riwayat Peminjaman Saya</h2>
 
+    <div style="margin-bottom: 15px;">
+        <a href="{{ route('buku.index') }}" style="background:#6b7280; color:white; padding:10px 20px; border-radius:4px; text-decoration:none; display:inline-block;">
+            ← Kembali ke Daftar Buku
+        </a>
+    </div>
+
     <div class="overflow-x-auto">
         <table style="width:100%; border-collapse: collapse; background: #fff;">
             <thead>
