@@ -15,7 +15,6 @@
         <table style="width:100%; border-collapse: collapse; background: #fff;">
             <thead>
                 <tr style="background:#f3f4f6;">
-                    <th style="padding: 10px; border: 1px solid #ddd;">ID</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Judul Buku</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Tanggal Pinjam</th>
                     <th style="padding: 10px; border: 1px solid #ddd;">Tanggal Kembali</th>
